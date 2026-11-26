@@ -1,0 +1,166 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "assessment_time",
+    "targets",
+    "historical_bindings"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "enum": [
+        "shop_review_goals/1.0"
+      ]
+    },
+    "assessment_time": {
+      "type": "string",
+      "minLength": 1
+    },
+    "targets": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "target_id",
+          "image_ids",
+          "subject",
+          "fact_scope",
+          "assessment_mode",
+          "required_evidence",
+          "source_refs",
+          "fact_refs",
+          "comparison_image_ids"
+        ],
+        "properties": {
+          "target_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "image_ids": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "subject": {
+            "type": "string",
+            "minLength": 1
+          },
+          "fact_scope": {
+            "type": "string",
+            "enum": [
+              "image_content",
+              "provided_information",
+              "real_world_claim",
+              "not_applicable"
+            ]
+          },
+          "assessment_mode": {
+            "type": "string",
+            "enum": [
+              "provided_consistency",
+              "image_only",
+              "mandatory_evidence"
+            ]
+          },
+          "required_evidence": {
+            "type": "array",
+            "minItems": 0,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "source_refs": {
+            "type": "array",
+            "minItems": 0,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "pack_id",
+                "source_id"
+              ],
+              "properties": {
+                "pack_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "source_id": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          },
+          "fact_refs": {
+            "type": "array",
+            "minItems": 0,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "pack_id",
+                "fact_id"
+              ],
+              "properties": {
+                "pack_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "fact_id": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          },
+          "comparison_image_ids": {
+            "type": "array",
+            "minItems": 0,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    },
+    "historical_bindings": {
+      "type": "array",
+      "minItems": 0,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "previous_issue_id",
+          "target_id",
+          "repair_object"
+        ],
+        "properties": {
+          "previous_issue_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "target_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "repair_object": {
+            "type": "string",
+            "enum": [
+              "copy_compliance",
+              "fact_confirmation"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

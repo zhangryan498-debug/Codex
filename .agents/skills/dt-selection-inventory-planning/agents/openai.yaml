@@ -1,0 +1,4 @@
+interface:
+  display_name: "D&T 选品库存资金规划"
+  short_description: "按证据审查选品、库存补货与资金占用，保留未知及采购价格门禁"
+  default_prompt: "使用 $dt-selection-inventory-planning 审查选品、补货和资金占用方案，只交付有依据的离线规划。"

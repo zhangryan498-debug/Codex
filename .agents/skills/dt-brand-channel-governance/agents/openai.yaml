@@ -1,0 +1,4 @@
+interface:
+  display_name: "D&T 品牌跨渠道协调"
+  short_description: "统一商品事实与品牌规范，分平台管理价格、素材版本、例外和交接"
+  default_prompt: "使用 $dt-brand-channel-governance 核对这份跨平台商品策略与素材，保留不破价和未知拦截。"

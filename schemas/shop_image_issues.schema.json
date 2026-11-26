@@ -1,0 +1,138 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "summary",
+    "release_decision",
+    "images",
+    "issues"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "enum": [
+        "1.0"
+      ]
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1
+    },
+    "release_decision": {
+      "type": "string",
+      "enum": [
+        "not_authorized"
+      ]
+    },
+    "images": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "image_id",
+          "image_file",
+          "read_status",
+          "observation",
+          "uncertainties"
+        ],
+        "properties": {
+          "image_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "image_file": {
+            "type": "string",
+            "minLength": 1
+          },
+          "read_status": {
+            "type": "string",
+            "enum": [
+              "read",
+              "unreadable",
+              "not_read"
+            ]
+          },
+          "observation": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uncertainties": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    },
+    "issues": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "issue_id",
+          "image_id",
+          "image_file",
+          "original_text",
+          "basis",
+          "severity",
+          "action",
+          "repair_copy",
+          "retest_status"
+        ],
+        "properties": {
+          "issue_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "image_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "image_file": {
+            "type": "string",
+            "minLength": 1
+          },
+          "original_text": {
+            "type": "string",
+            "minLength": 1
+          },
+          "basis": {
+            "type": "string",
+            "minLength": 1
+          },
+          "severity": {
+            "type": "string",
+            "enum": [
+              "P0",
+              "P1",
+              "P2",
+              "info"
+            ]
+          },
+          "action": {
+            "type": "string",
+            "minLength": 1
+          },
+          "repair_copy": {
+            "type": "string",
+            "minLength": 1
+          },
+          "retest_status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "blocked",
+              "not_applicable"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

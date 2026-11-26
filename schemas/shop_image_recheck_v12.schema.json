@@ -1,0 +1,350 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "summary",
+    "release_decision",
+    "images",
+    "issues",
+    "previous_report_sha256",
+    "rechecks"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "enum": [
+        "1.2"
+      ]
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1
+    },
+    "release_decision": {
+      "type": "string",
+      "enum": [
+        "not_authorized"
+      ]
+    },
+    "images": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "image_id",
+          "image_file",
+          "read_status",
+          "observation",
+          "uncertainties"
+        ],
+        "properties": {
+          "image_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "image_file": {
+            "type": "string",
+            "minLength": 1
+          },
+          "read_status": {
+            "type": "string",
+            "enum": [
+              "read",
+              "unreadable",
+              "not_read"
+            ]
+          },
+          "observation": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uncertainties": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    },
+    "issues": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "issue_id",
+          "image_id",
+          "image_file",
+          "original_text",
+          "basis",
+          "severity",
+          "action",
+          "repair_copy",
+          "retest_status",
+          "resolution_status",
+          "fact_verification_status",
+          "fact_basis",
+          "fact_subject",
+          "fact_scope",
+          "resolution_basis_type",
+          "fact_evidence_type",
+          "unsupported_claim_present",
+          "resolved_parts",
+          "unresolved_parts"
+        ],
+        "properties": {
+          "issue_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "image_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "image_file": {
+            "type": "string",
+            "minLength": 1
+          },
+          "original_text": {
+            "type": "string",
+            "minLength": 1
+          },
+          "basis": {
+            "type": "string",
+            "minLength": 1
+          },
+          "severity": {
+            "type": "string",
+            "enum": [
+              "P0",
+              "P1",
+              "P2",
+              "info"
+            ]
+          },
+          "action": {
+            "type": "string",
+            "minLength": 1
+          },
+          "repair_copy": {
+            "type": "string",
+            "minLength": 1
+          },
+          "retest_status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "blocked",
+              "not_applicable"
+            ]
+          },
+          "resolution_status": {
+            "type": "string",
+            "enum": [
+              "open",
+              "closed",
+              "partial",
+              "unknown"
+            ]
+          },
+          "fact_verification_status": {
+            "type": "string",
+            "enum": [
+              "verified",
+              "unverified",
+              "contradicted",
+              "not_applicable"
+            ]
+          },
+          "fact_basis": {
+            "type": "string",
+            "minLength": 1
+          },
+          "fact_subject": {
+            "type": "string",
+            "minLength": 1
+          },
+          "fact_scope": {
+            "type": "string",
+            "enum": [
+              "image_content",
+              "provided_information",
+              "real_world_claim",
+              "not_applicable"
+            ]
+          },
+          "resolution_basis_type": {
+            "type": "string",
+            "enum": [
+              "claim_removed",
+              "claim_corrected",
+              "other"
+            ]
+          },
+          "fact_evidence_type": {
+            "type": "string",
+            "enum": [
+              "missing",
+              "direct_image",
+              "user_confirmed",
+              "document",
+              "not_applicable"
+            ]
+          },
+          "unsupported_claim_present": {
+            "type": "boolean"
+          },
+          "resolved_parts": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "unresolved_parts": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    },
+    "previous_report_sha256": {
+      "type": "string",
+      "minLength": 64
+    },
+    "rechecks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "previous_issue_id",
+          "image_id",
+          "image_file",
+          "current_text",
+          "evidence",
+          "basis",
+          "action",
+          "resolution_status",
+          "fact_verification_status",
+          "fact_basis",
+          "fact_subject",
+          "fact_scope",
+          "resolution_basis_type",
+          "fact_evidence_type",
+          "unsupported_claim_present",
+          "resolved_parts",
+          "unresolved_parts"
+        ],
+        "properties": {
+          "previous_issue_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "image_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "image_file": {
+            "type": "string",
+            "minLength": 1
+          },
+          "current_text": {
+            "type": "string",
+            "minLength": 1
+          },
+          "evidence": {
+            "type": "string",
+            "minLength": 1
+          },
+          "basis": {
+            "type": "string",
+            "minLength": 1
+          },
+          "action": {
+            "type": "string",
+            "minLength": 1
+          },
+          "resolution_status": {
+            "type": "string",
+            "enum": [
+              "open",
+              "closed",
+              "partial",
+              "unknown"
+            ]
+          },
+          "fact_verification_status": {
+            "type": "string",
+            "enum": [
+              "verified",
+              "unverified",
+              "contradicted",
+              "not_applicable"
+            ]
+          },
+          "fact_basis": {
+            "type": "string",
+            "minLength": 1
+          },
+          "fact_subject": {
+            "type": "string",
+            "minLength": 1
+          },
+          "fact_scope": {
+            "type": "string",
+            "enum": [
+              "image_content",
+              "provided_information",
+              "real_world_claim",
+              "not_applicable"
+            ]
+          },
+          "resolution_basis_type": {
+            "type": "string",
+            "enum": [
+              "claim_removed",
+              "claim_corrected",
+              "other"
+            ]
+          },
+          "fact_evidence_type": {
+            "type": "string",
+            "enum": [
+              "missing",
+              "direct_image",
+              "user_confirmed",
+              "document",
+              "not_applicable"
+            ]
+          },
+          "unsupported_claim_present": {
+            "type": "boolean"
+          },
+          "resolved_parts": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "unresolved_parts": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    }
+  }
+}

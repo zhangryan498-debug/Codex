@@ -1,0 +1,24 @@
+{
+  "name": "ecommerce-visual-planning",
+  "owner": {
+    "name": "forest-USTC",
+    "url": "https://github.com/forest-USTC"
+  },
+  "plugins": [
+    {
+      "name": "ecommerce-visual-planning",
+      "source": "./",
+      "description": "电商主图与详情页视觉策划 SOP：按转化驱动力分配主图任务与详情页模块，两道确认门防返工，交付画面/图内文案/设计说明/生图 Prompt，附分层合规规则库与五维自审。",
+      "version": "1.0.0",
+      "license": "MIT",
+      "keywords": [
+        "ecommerce",
+        "copywriting",
+        "visual-design",
+        "taobao",
+        "compliance",
+        "chinese"
+      ]
+    }
+  ]
+}

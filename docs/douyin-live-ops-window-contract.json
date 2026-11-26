@@ -1,0 +1,93 @@
+{
+  "version": "douyin-live-window-v1",
+  "platform": "douyin",
+  "country": "CN",
+  "currency": "CNY",
+  "scope": "synthetic_offline",
+  "release_status": "not_authorized",
+  "case_schema": {
+    "case_id": "unique string",
+    "session_id": "unique session scope",
+    "platform": "douyin",
+    "country": "CN",
+    "currency": "CNY",
+    "evaluation_time": "explicit +08:00 synthetic instant, same as price-catalog instant",
+    "current_sku": "string",
+    "target_sku": "string, same as current for non-switch request",
+    "requested_action": "continue|switch|increase",
+    "expected_windows": "array of {start,end}; financial observations must cover these exact windows",
+    "records": "array of records defined below; arrival may be unordered, exact event duplicate is ignored, conflicting event_id blocks",
+    "inventory": "{on_hand,reserved,safety_stock,stop_below,resume_at,paused,snapshot_time,max_age_seconds}; integer units, nullable amounts are unknown; snapshot already reflects orders, do not subtract window sales twice",
+    "switch": "{preapproved,identity_verified,pricing_revision_verified}; known synthetic caller facts, never a live entitlement",
+    "price_ref": "catalog id of an existing actual completed price host; target SKU/quantity/time must match exact caller and host, model label alone is insufficient",
+    "quantity": "exact order quantity of target in price proof, not a per-unit assumption",
+    "price_revision": "exact integer target revision from the caller price authority",
+    "budget": "{cap_minor,spent_minor,committed_minor,requested_increment_minor}; exact nonnegative integers/null",
+    "hard_risk": "explicit boolean",
+    "restart_checks_verified": "explicit synthetic source boolean",
+    "increase_evidence": "null or {source_kind:controlled_incremental_trial,sku_id,session_id,start,end,mature:true,matched_basis:true,incremental_pre_ad_contribution_lower_minor,min_incremental_profit_minor,approved:true,budget_constraint_evidence:true,control_limits_verified:true,cooldown_satisfied:true,absolute_increment_cap_minor,balance_fraction_bps,risk_spend_cap_minor}; approved numeric limits are supplied, never invented"
+  },
+  "record_schema": {
+    "event_id": "string",
+    "kind": "cumulative|window",
+    "start": "direct window start; null for cumulative snapshot",
+    "end": "snapshot cutoff / direct window end",
+    "session_id": "must match case",
+    "sku_id": "scope; cumulative deltas cannot cross SKU",
+    "currency": "CNY",
+    "maturity": "mature|estimated",
+    "state": "complete|partial|missing",
+    "costs_through": "must equal end for a complete same-window ledger",
+    "metrics": {
+      "buyer_paid_minor": "cumulative gross goods payment or direct window goods payment",
+      "refunds_minor": "cash refund component, never subtract twice; exact duplicate event cannot repeat it",
+      "reimbursement_minor": "confirmed platform/creator reimbursement",
+      "clawback_minor": "confirmed reimbursement reversal",
+      "fees_minor": "charged fees before explicit fee credits",
+      "fee_credits_minor": "confirmed fee credits, no assumed refund credit",
+      "costs_minor": "all other listed costs before explicit recoveries",
+      "recoveries_minor": "confirmed COGS/other cost recovery, no assumed restocking",
+      "ad_spend_minor": "same-cutoff ad spend; nonnegative raw component"
+    }
+  },
+  "accounting": [
+    "All raw monetary components are exact nonnegative integer minor units or null. Differences of cumulative components and retained profit may be negative.",
+    "For direct or derived window: retained_revenue=buyer_paid-refunds+reimbursement-clawback; retained_fees=fees-fee_credits; retained_costs=costs-recoveries; pre_ad_contribution=retained_revenue-retained_fees-retained_costs; post_ad_profit=pre_ad_contribution-ad_spend.",
+    "Report mature and estimated ledgers separately. Costs cutoff mismatch, missing interval/field, conflicting duplicate or incompatible identity never defaults to zero.",
+    "For each expected window derive cumulative differences from exact same-SKU/session/maturity endpoints, or use matching direct window. If both exist, reconcile once; disagreement blocks. Do not use a wider cumulative gap as a missing short window.",
+    "gross_roi=buyer_paid/ad_spend, settlement_roi=retained_revenue/ad_spend, net_profit_roi=post_ad_profit/ad_spend. Zero spend -> ratio null; an observed zero window is not a missing window. Ratios may use {numerator,denominator}, never Infinity.",
+    "A cumulative counter decreasing after consistent same-source endpoints is a conflict, except net/retained quantities naturally become negative through separately represented refund or credit components. Explicit refund raw totals remain nondecreasing.",
+    "An approved switch resets target measurement baseline. Never inherit old SKU ROI/mature windows or spend increment. Normal approved switches can be proposed without claiming target performance has already been observed."
+  ],
+  "actions": {
+    "pause": "hard risk, known inventory below stop, known budget remaining <=0, unverified/unapproved changed SKU, failed/mismatched/expired price credential, or cannot resume due to absent/invalid hysteresis or checks",
+    "hold": "critical financial/budget/inventory unknown or unclosed data; increase lacking valid current-SKU controlled marginal evidence or exceeding any explicit remaining/cap/min-profit restriction",
+    "propose_continue": "complete mature current windows (observed zeros allowed), current price proven, stock/remaining budget valid, no hard risk; no new increment",
+    "propose_switch": "approved verified switch to the exact price-approved target with safe inventory/budget, zero increment, and reset_baseline=true; old SKU performance is not target evidence",
+    "propose_increase": "all safety and maturity checks; matched controlled incremental evidence and supplied approval limits; proposed increment <= min(remaining,absolute cap,remaining*fraction,risk cap), incremental contribution lower minus proposed increment >= supplied min incremental profit"
+  },
+  "required_output": [
+    "case_id",
+    "action",
+    "windows",
+    "cumulative",
+    "inventory_available",
+    "budget_remaining_minor",
+    "proposed_increment_minor",
+    "reset_baseline",
+    "price_proven",
+    "blocking_reasons",
+    "scope",
+    "release_status"
+  ],
+  "window_output": "{start,end,sku_id,mature:{components,retained_revenue_minor,retained_fees_minor,retained_costs_minor,pre_ad_contribution_minor,post_ad_profit_minor,gross_roi,settlement_roi,net_profit_roi}|null,estimated: same object|null,state}; preserve known partial components separately",
+  "limitations": "This contract supplies offline decision semantics, not new platform fee/rule claims. Known source facts are synthetic; actual model receipts and original price host are separately bound by the caller. No publication, streaming, price mutation or ad spend is authorized.",
+  "cumulative_output": {
+    "mature": "sum complete mature expected_windows exactly once, or null if any is incomplete",
+    "estimated": "sum complete estimated expected_windows exactly once, or null if any is incomplete",
+    "basis": "sum_of_expected_windows_only"
+  },
+  "partial_output": "Each window may preserve known_mature_components/known_estimated_components and blocking_reasons. Missing total net stays null; known component values remain visible.",
+  "marginal_window_alignment": "increase_evidence.start/end must exactly match one expected_window, end no later than evaluation_time. incremental_pre_ad_contribution_lower_minor is a signed derived integer, unlike nonnegative raw components and approval caps.",
+  "inventory_semantics": "available=on_hand-reserved-safety_stock, then compare to stop_below/resume_at. Snapshot already includes orders; refund is not restocking without confirmed stock evidence."
+}

@@ -1,0 +1,21 @@
+{
+  "scope": "Authorized synthetic offline testing only. Neither image depicts a real product. Both markets use the same geometric artwork with distinct market and SKU labels.",
+  "CN": {
+    "file": "CN.png",
+    "site": "CN",
+    "sku": "SIM-CN-POUCH",
+    "title": "轻便收纳包",
+    "subtitle": "随身小物，一包装好",
+    "source": "product-use-flow-item1-20261118-v1/visual-local/CN/synthetic-product.png",
+    "sha256": "958b765afddad30a01ac504c60dfac1b05efb6515ded832f1bc2e21d7410c6fb"
+  },
+  "PH": {
+    "file": "PH.png",
+    "site": "PH",
+    "sku": "SIM-PH-POUCH",
+    "title": "Blue travel pouch",
+    "subtitle": "Keep small essentials together",
+    "source": "product-use-flow-item1-20261118-v1/visual-local/PH/synthetic-product.png",
+    "sha256": "958b765afddad30a01ac504c60dfac1b05efb6515ded832f1bc2e21d7410c6fb"
+  }
+}

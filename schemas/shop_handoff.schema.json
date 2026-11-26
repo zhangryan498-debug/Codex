@@ -1,0 +1,82 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "minLength": 1,
+      "enum": [
+        "shop_handoff/1.0"
+      ]
+    },
+    "handoff_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "sender_role": {
+      "type": "string",
+      "minLength": 1
+    },
+    "recipient_role": {
+      "type": "string",
+      "minLength": 1
+    },
+    "scope": {
+      "type": "string",
+      "minLength": 1,
+      "enum": [
+        "offline_review"
+      ]
+    },
+    "release_decision": {
+      "type": "string",
+      "minLength": 1,
+      "enum": [
+        "not_authorized"
+      ]
+    },
+    "sku_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "facts_version": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 1000000000
+    },
+    "facts_sha256": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "run_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "contract_sha256": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "receipt_sha256": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  },
+  "required": [
+    "schema_version",
+    "handoff_id",
+    "sender_role",
+    "recipient_role",
+    "scope",
+    "release_decision",
+    "sku_id",
+    "facts_version",
+    "facts_sha256",
+    "run_id",
+    "contract_sha256",
+    "receipt_sha256"
+  ],
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}

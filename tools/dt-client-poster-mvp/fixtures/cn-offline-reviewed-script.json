@@ -1,0 +1,17 @@
+{
+  "approved_synthetic_reviews": [
+    {
+      "purpose": "internal_synthetic_paper_shoot_plan_review",
+      "source_sha256": "7e8896f4254abc2544fa7a364f197c4fdaf887b12314e3644d0b4540001c66e5",
+      "review_ref": "local reviewer SHA256 7e8896f4254abc2544fa7a364f197c4fdaf887b12314e3644d0b4540001c66e5",
+      "reviewer": "TEST-INDEPENDENT-CN",
+      "scope": {
+        "site": "CN",
+        "sku_id": "SYN-SKU-A",
+        "revision": 3,
+        "topic_id": "A-SHELF"
+      },
+      "content_sha256": "f03802f5fd1ab2f2694532aec52931e150b538356ee7fddf65dc2ab038215fe9"
+    }
+  ]
+}

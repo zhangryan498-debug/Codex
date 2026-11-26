@@ -1,0 +1,142 @@
+[
+  {
+    "role": "douyin-ad-buyer",
+    "source": "runtime-agents/douyin-ad-buyer/agent.md",
+    "source_sha256": "708426f67f6afca7b5c2988c2e54ad4e8a888e5a11baa0d7cdc2f79bb8f14796",
+    "config": ".codex/agents/douyin-ad-buyer.toml",
+    "skill": ".agents/skills/douyin-ad-buyer-playbook/SKILL.md"
+  },
+  {
+    "role": "douyin-campaign-ops",
+    "source": "runtime-agents/douyin-campaign-ops/agent.md",
+    "source_sha256": "127bcc1ac79d05bbe6f8347fa77ede4a96c025202c94a8b410763aa839df9592",
+    "config": ".codex/agents/douyin-campaign-ops.toml",
+    "skill": ".agents/skills/douyin-campaign-ops-playbook/SKILL.md"
+  },
+  {
+    "role": "douyin-competitor-analyst",
+    "source": "runtime-agents/douyin-competitor-analyst/agent.md",
+    "source_sha256": "82d49b582082dadd4179774b706b0bb3fb8be59c91d412b8b442ffccb157a9f7",
+    "config": ".codex/agents/douyin-competitor-analyst.toml",
+    "skill": ".agents/skills/douyin-competitor-analyst-playbook/SKILL.md"
+  },
+  {
+    "role": "douyin-lead",
+    "source": "runtime-agents/douyin-lead/agent.md",
+    "source_sha256": "a98c9a1c4e477f6e0444fbd1baa4da92af5c2f26956dfd51714ec40fcd1ed569",
+    "config": ".codex/agents/douyin-lead.toml",
+    "skill": ".agents/skills/douyin-lead-playbook/SKILL.md"
+  },
+  {
+    "role": "douyin-live-ops",
+    "source": "runtime-agents/douyin-live-ops/agent.md",
+    "source_sha256": "8f9d17daf5495d492a65186c2f8230ee711004c158c222162bd5aaa5ae46d849",
+    "config": ".codex/agents/douyin-live-ops.toml",
+    "skill": ".agents/skills/douyin-live-ops-playbook/SKILL.md"
+  },
+  {
+    "role": "douyin-selection",
+    "source": "runtime-agents/douyin-selection/agent.md",
+    "source_sha256": "130144b83da1756e788a4990bf047815f08ec366ab9d3e28c2fb4b2059c20d0f",
+    "config": ".codex/agents/douyin-selection.toml",
+    "skill": ".agents/skills/douyin-selection-playbook/SKILL.md"
+  },
+  {
+    "role": "douyin-shop-ops",
+    "source": "runtime-agents/douyin-shop-ops/agent.md",
+    "source_sha256": "566f6ddfe66e2f1edde089b1be30e39db70b5fa5e518e8676b05d8934a41bca9",
+    "config": ".codex/agents/douyin-shop-ops.toml",
+    "skill": ".agents/skills/douyin-shop-ops-playbook/SKILL.md"
+  },
+  {
+    "role": "douyin-video-director",
+    "source": "runtime-agents/douyin-video-director/agent.md",
+    "source_sha256": "e4d176b7d5ac647b2addb157501a739b7cd98fedb372696971f7d0f765d11da3",
+    "config": ".codex/agents/douyin-video-director.toml",
+    "skill": ".agents/skills/douyin-video-director-playbook/SKILL.md"
+  },
+  {
+    "role": "douyin-video-teardown",
+    "source": "runtime-agents/douyin-video-teardown/agent.md",
+    "source_sha256": "8b829ee0dc105150a9b407ff04f8a88d5cbe6d65f6242b36db56901be07b0d44",
+    "config": ".codex/agents/douyin-video-teardown.toml",
+    "skill": ".agents/skills/douyin-video-teardown-playbook/SKILL.md"
+  },
+  {
+    "role": "douyin-visual-designer",
+    "source": "runtime-agents/douyin-visual-designer/agent.md",
+    "source_sha256": "a17c54dbc3366640243f63b8c4d106971eb0b6ccea7ed4fcdd3a60535ca90aa5",
+    "config": ".codex/agents/douyin-visual-designer.toml",
+    "skill": ".agents/skills/douyin-visual-designer-playbook/SKILL.md"
+  },
+  {
+    "role": "tiktok-ad-buyer",
+    "source": "runtime-agents/tiktok-ad-buyer/agent.md",
+    "source_sha256": "6b735b4494c1f8554fe394a5c7c6925e30c22b6921f58a6d9dcf3c17fcb866bc",
+    "config": ".codex/agents/tiktok-ad-buyer.toml",
+    "skill": ".agents/skills/tiktok-ad-buyer-playbook/SKILL.md"
+  },
+  {
+    "role": "tiktok-campaign-ops",
+    "source": "runtime-agents/tiktok-campaign-ops/agent.md",
+    "source_sha256": "58faae2e3786ac297a09ca58cffba2308b9dbceb1900a05ac0a5716db296c76c",
+    "config": ".codex/agents/tiktok-campaign-ops.toml",
+    "skill": ".agents/skills/tiktok-campaign-ops-playbook/SKILL.md"
+  },
+  {
+    "role": "tiktok-competitor-analyst",
+    "source": "runtime-agents/tiktok-competitor-analyst/agent.md",
+    "source_sha256": "270052ea13241f6411ae05c8131c82a98d42737f6bc6a5861e20f5d713fa59c1",
+    "config": ".codex/agents/tiktok-competitor-analyst.toml",
+    "skill": ".agents/skills/tiktok-competitor-analyst-playbook/SKILL.md"
+  },
+  {
+    "role": "tiktok-lead",
+    "source": "runtime-agents/tiktok-lead/agent.md",
+    "source_sha256": "98ca5f314c55b20f64896c40a9ea290332da362af8e88d80ba3ab36d9455a61f",
+    "config": ".codex/agents/tiktok-lead.toml",
+    "skill": ".agents/skills/tiktok-lead-playbook/SKILL.md"
+  },
+  {
+    "role": "tiktok-live-ops",
+    "source": "runtime-agents/tiktok-live-ops/agent.md",
+    "source_sha256": "5718f0a01eff3f0275835c5d21d26e2aaf3a52e845029510e308b1134ec55abe",
+    "config": ".codex/agents/tiktok-live-ops.toml",
+    "skill": ".agents/skills/tiktok-live-ops-playbook/SKILL.md"
+  },
+  {
+    "role": "tiktok-selection",
+    "source": "runtime-agents/tiktok-selection/agent.md",
+    "source_sha256": "fee9d912c961e5d5ca93afdba49c1938f0ba18c2ee0f638a40712f07fd0aa34a",
+    "config": ".codex/agents/tiktok-selection.toml",
+    "skill": ".agents/skills/tiktok-selection-playbook/SKILL.md"
+  },
+  {
+    "role": "tiktok-shop-ops",
+    "source": "runtime-agents/tiktok-shop-ops/agent.md",
+    "source_sha256": "e5b342cae9a0a57cb1a7b6b92fdead7f90d23217f0f8493877b89c0172689b0f",
+    "config": ".codex/agents/tiktok-shop-ops.toml",
+    "skill": ".agents/skills/tiktok-shop-ops-playbook/SKILL.md"
+  },
+  {
+    "role": "tiktok-video-director",
+    "source": "runtime-agents/tiktok-video-director/agent.md",
+    "source_sha256": "c6e3d20e2ad6e6ac770fbe347df9c10b231a8684b335161b3d7cadd87a9ff27a",
+    "config": ".codex/agents/tiktok-video-director.toml",
+    "skill": ".agents/skills/tiktok-video-director-playbook/SKILL.md"
+  },
+  {
+    "role": "tiktok-video-teardown",
+    "source": "runtime-agents/tiktok-video-teardown/agent.md",
+    "source_sha256": "ffb14932e165aee468e0e55a1fc6520d5680044842e749cd3e8db00101c48dcd",
+    "config": ".codex/agents/tiktok-video-teardown.toml",
+    "skill": ".agents/skills/tiktok-video-teardown-playbook/SKILL.md"
+  },
+  {
+    "role": "tiktok-visual-designer",
+    "source": "runtime-agents/tiktok-visual-designer/agent.md",
+    "source_sha256": "8f53e6d2cd8828d84959b4c16145136cc49ef54d30aebc2cc6344e07edb8a2ac",
+    "config": ".codex/agents/tiktok-visual-designer.toml",
+    "skill": ".agents/skills/tiktok-visual-designer-playbook/SKILL.md"
+  }
+]

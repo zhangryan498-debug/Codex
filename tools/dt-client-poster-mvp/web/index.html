@@ -1,0 +1,576 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>D&amp;T 工作台</title>
+  <link rel="stylesheet" href="/app.css">
+  <link rel="stylesheet" href="/workspace-design.css">
+  <script src="/app.js" defer></script>
+  <script src="/workspace-design.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#workspace">跳到工作区</a>
+  <div class="shell">
+    <aside class="rail">
+      <a class="brand" href="/" aria-label="D&amp;T 工作台首页">
+        <strong>D&amp;T 工作台</strong><span>D&amp;T Workbench</span>
+      </a>
+      <nav class="nav" aria-label="工作区">
+        <button type="button" data-view="home" aria-current="page"><span class="nav-icon home-icon" aria-hidden="true"></span>首页</button>
+        <button type="button" data-view="poster"><span class="nav-icon image-icon" aria-hidden="true"></span>商品任务</button>
+        <button type="button" data-view="video"><span class="nav-icon video-icon" aria-hidden="true"></span>视频任务</button>
+        <button type="button" data-view="tasks"><span class="nav-icon time-icon" aria-hidden="true"></span>任务记录</button>
+        <button type="button" data-view="role"><span class="nav-icon tools-icon" aria-hidden="true"></span>岗位工具</button>
+        <button type="button" data-view="models"><span class="nav-icon link-icon" aria-hidden="true"></span>模型连接</button>
+        <button type="button" data-view="settings"><span class="nav-icon setup-icon" aria-hidden="true"></span>设置</button>
+      </nav>
+      <div class="rail-footer">
+        <span class="nav-icon folder-icon" aria-hidden="true"></span><span>本机工作区</span>
+        <span id="profile-name"></span>
+      </div>
+    </aside>
+    <main id="workspace" tabindex="-1">
+      <header class="topbar">
+        <div class="page-heading"><h1 id="page-title">首页</h1><span class="mode" id="mode-badge" hidden></span></div>
+        <button type="button" class="text-button" id="top-settings">模型连接</button>
+      </header>
+      <div class="content">
+        <p id="session-status" class="notice" role="alert" hidden></p>
+        <p id="workspace-open-status" class="notice" role="status" hidden></p>
+        <section class="ws-stack" id="home-view" aria-labelledby="home-title">
+          <div class="ws-intro"><h2 id="home-title">今天要做什么？</h2><p>从一件商品或一段视频开始。</p></div>
+          <div class="ws-start-grid">
+            <article class="ws-start"><span class="ws-tile-icon image-icon" aria-hidden="true"></span><div>
+              <h3>商品海报与详情页</h3><p>用自己的商品图做海报，也可一起制作主图和详情页。</p>
+              <button type="button" id="workspace-new-product" class="button primary">新建商品任务 <span aria-hidden="true">→</span></button>
+            </div></article>
+            <article class="ws-start video-start"><span class="ws-tile-icon video-icon" aria-hidden="true"></span><div>
+              <h3>视频任务</h3><p>剪辑已有视频，或查看生成新镜头需要什么。</p>
+              <button type="button" id="workspace-open-video" class="button primary">打开视频任务 <span aria-hidden="true">→</span></button>
+            </div></article>
+          </div>
+          <section class="panel ws-recent" aria-labelledby="home-task-title">
+            <div class="panel-heading"><h3 id="home-task-title">继续上次的任务</h3><button type="button" class="button outline" id="workspace-all-tasks">查看全部</button></div>
+            <p class="muted" id="workspace-empty">这份预览暂时没有已保存任务。保存商品信息后，可以在这里接着做。</p>
+            <div id="workspace-recent" class="ws-task-list" hidden></div>
+          </section>
+          <div class="ws-start-grid ws-shortcuts">
+            <button type="button" class="panel" id="workspace-open-roles"><span class="nav-icon tools-icon" aria-hidden="true"></span><span><strong>岗位工具</strong><small>打开原有岗位和商城收件工具</small></span><span aria-hidden="true">→</span></button>
+            <button type="button" class="panel" id="workspace-open-models"><span class="nav-icon link-icon" aria-hidden="true"></span><span><strong>模型连接</strong><small id="workspace-model-shortcut">检查语言与工具调用</small></span><span aria-hidden="true">→</span></button>
+          </div>
+        </section>
+        <section class="ws-stack" id="video-view" aria-labelledby="ws-video-title" hidden>
+          <div class="ws-intro"><h2 id="ws-video-title">从已有视频开始</h2><p>按任务选择已有素材或生成新镜头。</p></div>
+          <fieldset class="ws-chooser panel"><legend>这次要做什么？</legend>
+            <label><input type="radio" name="workspace-video-mode" id="workspace-video-existing" checked> 剪辑已有视频</label>
+            <label><input type="radio" name="workspace-video-mode" id="workspace-video-new"> 生成新镜头</label>
+          </fieldset>
+          <section class="panel ws-stack" id="workspace-video-local" aria-labelledby="ws-video-local-title">
+            <h3 id="ws-video-local-title">用本机已有素材</h3><p>已有视频可直接走原剪辑或转写工具。剪辑需要本机 MP4，按工具提示提供时间轴或字幕。此路径无需视频生成模型。</p>
+            <div class="ws-actions"><button type="button" id="workspace-video-edit" class="button primary">打开原剪辑工具</button><button type="button" id="workspace-video-transcribe" class="button outline">打开视频转写</button></div>
+          </section>
+          <section class="panel ws-stack" id="workspace-video-cloud" aria-labelledby="ws-video-cloud-title" hidden>
+            <h3 id="ws-video-cloud-title">生成新镜头</h3><p id="workspace-video-need" role="status"></p><div data-v2-dispatch-wrap="video"><button type="button" class="button outline" data-v2-dispatch="video" hidden>验证本机视频路由</button><p data-v2-dispatch-result="video" class="muted" role="status"></p></div>
+            <div class="ws-actions"><button type="button" id="workspace-video-models" class="button primary">配置视频生成模型</button><button type="button" id="workspace-video-reuse" class="button outline">改用已有视频</button><button type="button" id="workspace-video-later" class="button neutral">稍后处理</button></div>
+          </section>
+        </section>
+        <section class="ws-stack" id="models-view" aria-labelledby="mc-title" hidden>
+          <div class="ws-intro"><div class="ws-intro-row"><div><h2 id="mc-title">连接账户并按用途选择模型</h2><p id="mc-preview-intro">语言、生图和视频可以各用不同账户。这里只演示本机替身，请勿输入真实 API Key。</p></div><button type="button" id="mc-return" class="button outline" hidden>返回原任务</button></div></div>
+            <section class="panel" id="mc-customer-content" aria-labelledby="mc-customer-title" hidden>
+              <h3 id="mc-customer-title">连接账户</h3>
+              <p id="mc-customer-intro" class="muted">先选择供应商和套餐，再在 Windows 本机窗口输入自己的 API Key、选定语言模型。模型设置完成后可返回原草稿。</p>
+              <form id="mc-customer-form" autocomplete="off">
+                <div class="ws-model-fields">
+                  <div class="field">
+                    <label for="mc-customer-provider">供应商</label>
+                    <select id="mc-customer-provider" required disabled><option value="">请选择供应商</option></select>
+                  </div>
+                  <div class="field">
+                    <label for="mc-customer-plan">账户或套餐类型</label>
+                    <select id="mc-customer-plan" required disabled><option value="">请选择账户或套餐</option></select>
+                  </div>
+                </div>
+                <p class="ws-help">Key 只在本机连接窗口输入，仅供本次会话使用。打开窗口、选模型或取消都不会发出供应商请求。开始商品任务并授权后才可能使用你的套餐或产生费用。</p>
+                <div class="ws-actions">
+                  <button type="submit" id="mc-customer-connect" class="button primary" disabled>打开本机连接窗口</button>
+                  <button type="button" id="mc-customer-disconnect" class="button neutral" hidden>移除本次凭据</button>
+                  <button type="button" id="mc-customer-refresh" class="button outline">刷新本机状态</button>
+                </div>
+                <p id="mc-customer-status" class="notice" role="status" data-state="not_loaded">正在读取本机连接状态。</p>
+              </form>
+              <section aria-labelledby="mc-customer-purposes">
+                <h3 id="mc-customer-purposes">按用途查看模型</h3>
+                <div class="ws-assignments">
+                  <div class="field"><strong>语言与视觉理解</strong><span id="mc-customer-model">尚未选定语言模型</span><small>商品流程需要工具调用。当前接入使用商品文字信息，原图和导出文件留在本机。</small></div>
+                  <div class="field"><strong>图片生成</strong><span>本人模式暂未接入</span><small>可用已有商品图制作主图、海报和详情页。</small></div>
+                  <div class="field"><strong>视频生成</strong><span>本人模式暂未接入</span><small>可继续处理已有视频。</small></div>
+                </div>
+              </section>
+              <details class="ws-model-list">
+                <summary>官方套餐目录 · 当前账号权限未验证</summary>
+                <p class="muted">个人套餐没有已核实的按 Key 查询目录入口。以下条目供选择时参考，实际账号和工具调用能力要由本人使用时确认。阿里云百炼和千问 AI 平台（中国）的个人套餐使用各自的端点和凭据。普通百炼工作空间不在此入口范围内。</p>
+                <ul id="mc-customer-candidates"></ul>
+              </details>
+            </section>
+              <div id="mc-v2-content" class="ws-stack" hidden>
+                <section class="panel" aria-labelledby="mc-v2-connect-title">
+                  <h3 id="mc-v2-connect-title">添加账户</h3>
+                  <form id="mc-v2-form" autocomplete="off">
+                    <div class="ws-model-fields">
+                      <div class="field"><label for="mc-v2-provider">供应商</label><select id="mc-v2-provider" required></select></div>
+                      <div class="field"><label for="mc-v2-method">连接方式</label><select id="mc-v2-method" required></select></div>
+                      <div class="field"><label for="mc-v2-label">账户名称（选填）</label><input id="mc-v2-label" maxlength="64" placeholder="例如 商品文案"></div>
+                      <div class="field" id="mc-v2-base-field" hidden><label for="mc-v2-base-url">服务地址</label><input id="mc-v2-base-url" type="url" autocomplete="off" maxlength="300" placeholder="https://供应商域名/v1" aria-describedby="mc-v2-base-help mc-v2-endpoint-status"><small id="mc-v2-base-help">填写供应商为该协议提供的 HTTPS 基础地址。Key 请在本机输入窗填写。</small></div>
+                      <div class="field" id="mc-v2-workspace-field" hidden><label for="mc-v2-workspace">工作空间编号</label><input id="mc-v2-workspace" maxlength="64" aria-describedby="mc-v2-endpoint-status"></div>
+                    </div>
+                    <p id="mc-v2-endpoint-status" class="notice" role="status" hidden></p>
+                    <p id="mc-v2-method-detail" class="ws-help" aria-live="polite">先选择供应商和连接方式。</p>
+                    <details id="mc-v2-reference" class="ws-model-list" hidden>
+                      <summary>官方参考 · 当前账号权限未验证</summary>
+                      <ul id="mc-v2-reference-list"></ul>
+                    </details>
+                    <div class="ws-connect-actions">
+                      <p class="muted">API Key 只在 Windows 本机窗口输入，仅供本次会话使用。打开窗口和取消都不会发出供应商请求。</p>
+                      <button id="mc-v2-open" type="submit" class="button primary" disabled>打开本机窗口输入 Key</button>
+                    </div>
+                    <p id="mc-v2-status" class="notice" role="status" hidden></p>
+                  </form>
+                </section>
+                <section class="panel" aria-labelledby="mc-v2-accounts-title">
+                  <div class="ws-intro-row"><h3 id="mc-v2-accounts-title">账户与模型</h3><button id="mc-v2-refresh" class="button outline" type="button">刷新本机状态</button></div>
+                  <p class="muted" id="mc-v2-empty">添加账户后，可以分别查询各账号的模型目录。</p>
+                  <div id="mc-v2-accounts"></div>
+                </section>
+                <section class="panel" aria-labelledby="mc-v2-assign-title">
+                  <h3 id="mc-v2-assign-title">按用途选择模型</h3>
+                  <p class="muted">三种用途可以来自不同账户。选项保存在本机，只有任务需要时才检查对应模型。</p>
+                  <div class="ws-assignments">
+                    <div class="field"><label for="mc-v2-assign-language">语言与工具调用</label><select id="mc-v2-assign-language"></select><small id="mc-v2-note-language">支持的语言模型可生成待审卖点文案。</small></div>
+                    <div class="field"><label for="mc-v2-assign-image">图片生成</label><select id="mc-v2-assign-image"></select><small id="mc-v2-note-image">只有生成新图片时需要。</small></div>
+                    <div class="field"><label for="mc-v2-assign-video">视频生成</label><select id="mc-v2-assign-video"></select><small id="mc-v2-note-video">只有生成新镜头时需要。</small></div>
+                  </div>
+                  <p id="mc-v2-assign-status" class="notice" role="status" hidden></p>
+                </section>
+              </div>
+
+            <div id="mc-preview-content" class="ws-stack" hidden>
+          <section class="panel" aria-labelledby="mc-form-title">
+            <h3 id="mc-form-title">连接账户</h3>
+            <form id="workspace-model-form" autocomplete="off">
+              <div class="ws-model-fields">
+                <div class="field"><label for="mc-provider">供应商</label><select id="mc-provider" disabled></select></div>
+                <div class="field"><label for="mc-plan">账户或套餐类型</label><select id="mc-plan" disabled></select></div>
+                <div class="field"><label for="mc-key">API Key</label><input type="password" id="mc-key" autocomplete="new-password" placeholder="仅本机测试凭据" maxlength="32"></div>
+                <div class="field" id="mc-workspace-field" hidden><label for="mc-workspace">北京工作空间编号</label><input id="mc-workspace" placeholder="llm-demo123" maxlength="64"></div>
+                <div class="field"><label for="mc-label">账户名称（选填）</label><input id="mc-label" placeholder="例如 商品文案" maxlength="64"></div>
+                <div class="field"><label for="mc-scenario">测试替身返回</label><select id="mc-scenario"><option value="demo-local-ok">正常</option><option value="demo-local-empty">空目录</option><option value="demo-local-denied">无目录权限</option><option value="demo-local-failed">连接失败</option></select></div>
+              </div>
+              <div id="mc-plan-hint" class="ws-help" aria-live="polite"></div>
+              <div class="ws-connect-actions"><p class="muted">本机不保存 API Key。预览尚未启用系统安全保存。删除账户会清除其本机配置和用途分配。</p><button type="submit" id="mc-connect" class="button primary" disabled>连接并获取模型</button></div>
+              <p id="mc-connect-status" class="notice" role="status" hidden></p>
+            </form>
+          </section>
+          <section class="panel" aria-labelledby="mc-assign-title">
+            <h3 id="mc-assign-title">按用途配置模型</h3>
+            <div class="ws-assignments">
+              <div class="field"><label for="mc-assign-language">语言与视觉理解</label><select id="mc-assign-language"></select><small id="mc-language-note">运行 Agent 和 Skill 需要支持工具调用。</small></div>
+              <div class="field"><label for="mc-assign-image">图片生成</label><select id="mc-assign-image"></select><small id="mc-image-note">生成新图时才用。商品图排版可直接用原图。</small></div>
+              <div class="field"><label for="mc-assign-video">视频生成</label><select id="mc-assign-video"></select><small id="mc-video-note">生成新镜头时才用。已有视频可直接剪辑。</small></div>
+            </div>
+            <p id="mc-assign-status" class="notice" role="status" hidden></p>
+          </section>
+          <section class="panel" aria-labelledby="mc-accounts-title">
+            <h3 id="mc-accounts-title">保存在本机的账户配置</h3>
+            <p class="muted" id="mc-account-empty">添加账户后可以在新任务中复用。真实连接和账号权限尚未验证。</p>
+            <div id="mc-accounts"></div>
+          </section>
+            </div>
+        </section>
+        <section class="poster-grid" id="poster-view" aria-label="商品工作区" hidden>
+          <div class="ws-product-header">
+            <div class="ws-intro-row"><div class="ws-intro"><h2>制作商品内容</h2><p id="workspace-product-subtitle">先保存商品图片和事实，再开始模型会话。</p></div><button type="button" id="workspace-reset-product" class="button outline" hidden>新建商品任务</button></div>
+            <ol class="ws-steps" aria-label="商品任务进度">
+              <li data-ws-step="1"><span>1</span>选产物</li><li data-ws-step="2"><span>2</span>加材料</li><li data-ws-step="3"><span>3</span>审校出件</li><li data-ws-step="4"><span>4</span>商城收件</li>
+            </ol>
+          </div>
+          <form id="poster-form" class="panel information">
+            <h2>商品图片与资料</h2>
+            <p id="workspace-draft-status" class="notice" role="status" hidden></p>
+            <fieldset class="ws-chooser ws-inline-choice"><legend>这次用什么商品图？</legend>
+              <label><input type="radio" name="workspace-image-mode" id="workspace-image-existing" checked> 用已有商品图</label>
+              <label><input type="radio" name="workspace-image-mode" id="workspace-image-new"> 生成新图片</label>
+            </fieldset>
+            <div class="ws-help" id="workspace-image-gate" hidden>
+              <p id="workspace-image-need" role="status"></p><div data-v2-dispatch-wrap="image"><button type="button" class="button outline" data-v2-dispatch="image" hidden>验证本机生图路由</button><p data-v2-dispatch-result="image" class="muted" role="status"></p></div>
+              <div class="ws-actions"><button type="button" class="button outline" id="workspace-image-models">配置图片生成模型</button><button type="button" class="button neutral" id="workspace-image-reuse">改用已有图片</button><button type="button" class="button neutral" id="workspace-image-later">稍后处理</button></div>
+            </div>
+            <div class="field">
+              <label for="site">站点</label>
+              <select id="site" name="site" required>
+                <option value="CN">抖音中国</option>
+                <option value="PH">菲律宾 TikTok Shop</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="product-title">商品名称</label>
+              <input id="product-title" name="title" required autocomplete="off" maxlength="46" placeholder="输入商品名称">
+            </div>
+            <div class="field">
+              <label for="product-facts">商品事实</label>
+              <textarea id="product-facts" name="facts" required maxlength="2000" rows="4" placeholder="填写你确认的大小、材料或特点"></textarea>
+              <small>请输入可核实的信息。海报文案生成前会使用这些事实。</small>
+            </div>
+            <div class="field">
+              <label for="poster-product-ref">商品编号</label>
+              <input id="poster-product-ref" type="text" maxlength="64" autocomplete="off" placeholder="例如 DEMO-001">
+              <small>制作新商品海报或详情页时，填一个能对应这件商品的编号，用来核对商城收到的版本。</small>
+            </div>
+            <div class="field">
+              <label for="product-file">商品原图</label>
+              <input id="product-file" type="file" name="image" accept="image/png,image/jpeg,.png,.jpg,.jpeg">
+                <img class="ws-source-preview" id="workspace-source-preview" alt="刚选择的商品原图" hidden>
+                <small id="source-note">选择本机 PNG 或 JPG 商品图片。</small>
+            </div>
+            <div class="field">
+              <label class="combined-detail-option"><input type="checkbox" id="poster-combined-detail" autocomplete="off" aria-describedby="poster-combined-scope"> 同时做主图和商品详情页</label>
+              <small id="poster-combined-scope">抖音中国可选做商品详情页。新建时只做海报就不用勾选。</small>
+              <div id="poster-combined-note" hidden>
+                <h3>做商品详情页还需要这些信息</h3>
+                <p>这些信息用来写商品详情页。照片不一定能看出尺寸、材质或怎么用，我们不会替你猜。能说明多项的照片可以重复选，已上传的图片不用重传。</p>
+                <small>每项写一句你确认的话，再选一张能说明它的照片。每张 PNG 或 JPG 不超过 4 MiB。可以先保存任务，晚点再补。</small>
+              </div>
+              <section id="poster-combined-fields" class="combined-detail-fields" aria-label="商品详情页信息" hidden></section>
+              <p id="poster-combined-missing" class="muted" role="status" hidden></p>
+            </div>
+            <details class="ws-direct-copy">
+              <summary>我已有确认好的海报文案</summary>
+              <div class="field">
+                <label for="confirmed-poster-title">海报标题</label>
+                <textarea id="confirmed-poster-title" rows="2"></textarea>
+                <label for="confirmed-poster-subtitle">海报副标题</label>
+                <textarea id="confirmed-poster-subtitle" rows="2"></textarea>
+                <small>两项都填时沿用原文案。要由模型提炼卖点，请留空。</small>
+              </div>
+            </details>
+            <div class="sample-actions" aria-label="模拟样例">
+              <button class="button outline" type="button" data-fixture="CN" disabled>载入中国模拟样例</button>
+              <button class="button outline" type="button" data-fixture="PH" disabled>载入菲律宾模拟样例</button>
+            </div>
+            <p id="poster-status" class="notice" role="status" hidden></p>
+            <div class="form-bottom model-access-actions">
+              <button type="button" class="button outline" id="poster-form-model-access">接入我的模型</button>
+              <button type="submit" class="button primary" id="make-poster" disabled>保存商品资料</button>
+              <button type="button" class="button neutral" id="workspace-clear-product" hidden>清空草稿</button>
+              <button type="button" class="button outline" id="workspace-undo-product" hidden>撤回清空</button>
+            </div>
+          </form>
+          <section class="panel result" aria-label="结果预览">
+            <div class="panel-heading">
+              <h2 id="workspace-result-heading" tabindex="-1">审校与同版取件</h2>
+              <span class="muted" id="local-result-status" hidden>已保存到本机</span>
+            </div>
+                        <section id="workspace-product-requirements" class="ws-requirements" aria-labelledby="workspace-needs-title">
+              <h3 id="workspace-needs-title">本任务需要</h3>
+              <dl><div><dt>语言模型</dt><dd id="workspace-language-need">正在检查配置</dd></div><div><dt>图片生成</dt><dd id="workspace-image-summary">已有商品图可直接使用</dd></div><div><dt>视频生成</dt><dd>此任务无需</dd></div></dl>
+              <button type="button" id="workspace-product-models" class="button outline">查看模型连接</button>
+              <p id="workspace-local-files-note" class="muted">商品照片和成品存在本机。当前预览的模型也只在本机运行。</p><div data-v2-dispatch-wrap="language"><button type="button" class="button outline" data-v2-dispatch="language" hidden>验证本机语言路由</button><p data-v2-dispatch-result="language" class="muted" role="status"></p></div>
+            </section>
+
+            <section id="workspace-task-provider-operations" class="card field" aria-labelledby="workspace-task-provider-title" hidden>
+              <h3 id="workspace-task-provider-title">用所选模型处理此商品</h3>
+              <p class="muted">只有你确认后才会调用对应服务。已有图片可继续用来本机排版，剪辑已有视频也无需生成模型。</p>
+              <p id="workspace-task-operation-version" class="muted"></p>
+              <div id="workspace-task-operation-cards"></div>
+              <p id="workspace-task-operation-status" class="notice" role="status" hidden></p>
+              <button type="button" id="workspace-task-operations-refresh" class="button neutral">刷新本机回执</button>
+            </section>
+            <div id="task-summary" class="task-summary" aria-live="polite" hidden>
+              <strong id="result-name"></strong><span id="result-state"></span>
+              <p id="result-message" hidden></p>
+              <p id="result-usage" hidden></p>
+            </div>
+              <section id="poster-agent-panel" class="card" hidden aria-label="客户交互会话">
+                <button type="button" id="poster-agent-start" class="button outline">开始本机交互模拟</button>
+                <p id="poster-agent-status" class="muted" role="status"></p>
+              </section>
+            <section id="poster-token-plan-status" class="field" hidden>
+              <h3>商品任务会话</h3>
+              <p id="poster-token-plan-detail" class="muted" role="status"></p>
+              <p id="poster-token-plan-new-scope" class="muted" hidden>海报采用本机上传原图和本地排版，提供 720×880 PNG 及可编辑 PSD。</p>
+              <p id="poster-task-detail-summary" class="muted" role="status" hidden></p>
+              <details id="poster-task-detail-edit" hidden>
+                <summary>补充商品信息</summary>
+                <form id="poster-task-detail-form" class="field">
+                  <h4>做商品详情页还需要这些信息</h4>
+                  <p>这些信息用来写商品详情页。照片不一定能看出尺寸、材质或怎么用，我们不会替你猜。能说明多项的照片可以重复选，已上传的图片不用重传。</p>
+                  <small>每项写一句你确认的话，再选一张能说明它的照片。可以先保存，晚点再补。</small>
+                  <section id="poster-task-detail-fields" class="combined-detail-fields" aria-label="商品详情页信息"></section>
+                  <p id="poster-task-detail-error" class="notice" role="status" hidden></p>
+                  <button type="submit" id="poster-task-detail-save" class="button outline">保存商品信息</button>
+                </form>
+              </details>
+              <div id="poster-token-plan-launch" hidden>
+                <p id="poster-token-plan-new-notice" hidden>请本人在本机确认窗选择自己的模型并发起会话。云端读取会话所需的商品事实、工具定义、版本标识和回执摘要。本机处理商品图和成品文件。</p>
+                <div id="poster-token-plan-old-notice">
+                <p>请本人在本机确认窗中选择自己的模型并输入个人 Key。此次核对使用已审 BAVA 稿件，模型在同一会话中选择卖点 Skill 和商城 Agent。</p>
+                <p>会向所选服务发送用于本次会话的文本及工具结果。原图、海报 PNG、PSD 和其他文件留在本机。</p>
+                </div>
+                <p id="poster-customer-consent-note" class="muted" hidden>开始前会打开 Windows 本机确认，显示这次任务的模型和拟发送的商品文字。只有在该窗口确认才会请求供应商。原图、草稿和导出文件留在本机。</p>
+                <button type="button" class="button primary" id="poster-token-plan-start">接入我的模型</button>
+              </div>
+              <p id="poster-token-plan-error" class="notice" role="status" hidden></p>
+              <button type="button" class="button outline" id="poster-token-plan-receipt" hidden>查看商城同版收件</button>
+            </section>
+            <section id="poster-copy-panel" class="field" hidden>
+              <button type="button" id="poster-copy-run" class="button outline">提炼卖点</button>
+              <p id="poster-copy-status" role="status" class="notice" hidden></p>
+            </section>
+            <section id="planned-panel" class="field" hidden>
+              <h3>本任务排版与审校</h3>
+              <div id="planned-manual-input">
+              <label for="planned-submission">排版计划（JSON）</label>
+              <textarea id="planned-submission" rows="10"></textarea>
+              <button id="planned-save" class="button outline" type="button">保存排版计划</button>
+              </div>
+              <fieldset id="planned-approval" hidden>
+                <legend>审校已保存的计划</legend>
+                <p id="planned-customer-review" hidden>请核对商品原图与卖点是否一致，以及计划中的图层、位置和尺寸。渲染后可在下方检查成品。</p>
+                <p id="planned-readable"></p>
+                <details id="planned-technical"><summary>查看排版数据</summary><pre id="planned-summary"></pre></details>
+                <label><input type="checkbox" id="planned-check-copy">已核对首屏卖点和文案</label>
+                <label><input type="checkbox" id="planned-check-asset">已核对本任务原图与商品编号</label>
+                <label><input type="checkbox" id="planned-check-layout">已核对计划的层、位置和尺寸</label>
+                <button id="planned-render" class="button primary" type="button">确认审校并渲染</button>
+              </fieldset>
+              <p id="planned-status" class="notice" role="status" hidden></p>
+            </section>
+            <div id="preview-area" class="preview-area">
+              <div class="empty" id="preview-empty">
+                <span class="preview-icon image-icon" aria-hidden="true"></span>
+                <p id="preview-empty-text">提交商品信息后在这里查看海报</p>
+              </div>
+              <img id="poster-preview" alt="" hidden>
+            </div>
+            <div id="output-tools" class="output-tools" hidden>
+              <div class="version-picker">
+                <label for="version-select">版本</label>
+                <select id="version-select"></select>
+              </div>
+              <div class="result-actions">
+                <a id="download-png" class="button outline">下载 PNG</a>
+                <a id="download-psd" class="button outline">下载 PSD</a>
+                <a id="download-review" class="button neutral" target="_blank" rel="noopener">编号图</a>
+                <button id="edit-toggle" type="button" class="button neutral" aria-controls="edit-form" aria-expanded="false">修改文字</button>
+              </div>
+              <p id="revision-status" class="notice" role="status" hidden></p>
+            </div>
+            <form id="edit-form" class="edit-form" hidden>
+              <div class="field">
+                <label for="element-select">元素编号</label>
+                <select id="element-select" required></select>
+              </div>
+              <div class="field">
+                <label for="element-text" id="element-value-label">新文字</label>
+                <textarea id="element-text" rows="2" required aria-describedby="element-text-help"></textarea>
+                <small id="element-text-help"></small>
+              </div>
+              <label id="planned-edit-review-label" hidden><input type="checkbox" id="planned-edit-reviewed">已核对当前版这一个编号的修改</label>
+              <div class="edit-actions">
+                <button type="submit" id="edit-submit" class="button primary">保存为新版</button>
+                <button type="button" id="edit-cancel" class="button neutral">取消</button>
+              </div>
+            </form>
+          </section>
+        </section>
+        <section class="poster-grid" id="transcription-view" aria-label="视频转写工作区" hidden>
+          <form id="transcription-form" class="panel information">
+            <h2>转写设置</h2>
+            <div class="field">
+              <label for="transcription-site">站点</label>
+              <select id="transcription-site" required>
+                <option value="CN">抖音中国</option>
+                <option value="PH">菲律宾 TikTok Shop</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="transcription-language">音频语言</label>
+              <select id="transcription-language" required></select>
+            </div>
+            <div class="field">
+              <label for="transcription-media">本地视频或音频</label>
+              <input id="transcription-media" type="file" accept=".wav,.mp4,.mov,.m4a" required aria-describedby="transcription-limit">
+              <small id="transcription-limit"></small>
+            </div>
+            <p id="transcription-form-status" class="notice" role="status" hidden></p>
+            <div class="form-bottom"><button id="transcription-submit" class="button primary" type="submit" disabled>开始转写</button></div>
+          </form>
+          <section class="panel result" aria-labelledby="transcription-result-heading">
+            <div class="panel-heading"><h2 id="transcription-result-heading">转写结果</h2></div>
+            <div id="transcription-result" class="workflow-result" role="region" aria-labelledby="transcription-result-heading"></div>
+          </section>
+        </section>
+        <section class="poster-grid" id="role-view" aria-label="岗位工具工作区" hidden>
+          <form id="role-form" class="panel information">
+            <h2>任务输入</h2>
+            <p class="muted execution-note">素材和岗位任务在本机处理。选择生成字幕时使用本机语音模型。</p>
+            <div class="field">
+              <label for="role-site">站点</label>
+              <select id="role-site" required>
+                <option value="CN">抖音中国</option>
+                <option value="PH">菲律宾 TikTok Shop</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="role-tool">岗位工具</label>
+              <select id="role-tool" required aria-describedby="role-description role-scope"></select>
+              <small id="role-description"></small>
+              <small id="role-scope" hidden></small>
+            </div>
+            <div class="field" id="role-input-field">
+              <label for="role-input">任务材料（JSON）</label>
+              <textarea id="role-input" rows="9" required spellcheck="false" aria-describedby="role-input-help role-form-status"></textarea>
+              <small id="role-input-help">提交一个 JSON 对象。</small>
+              <button id="role-example" type="button" class="button outline" hidden>填入示例</button>
+            </div>
+            <fieldset id="main-image-input" class="field" hidden disabled>
+              <legend>主图材料</legend>
+              <label for="main-image-product">合成商品编号</label>
+              <input id="main-image-product" type="text" required maxlength="64" pattern="[A-Za-z0-9][A-Za-z0-9_.\-]{0,63}" aria-describedby="main-image-id-help">
+              <small id="main-image-id-help">编号用英文字母或数字开头，可含点、下划线或连字符。</small>
+              <small id="main-image-file-help"></small>
+              <small id="main-image-market" hidden>菲律宾文案请使用英文，币种为 PHP。未提交价格和尺寸资料时保留待核。</small>
+              <label for="main-image-extra-edge">附加方图边长（选填）</label>
+              <input id="main-image-extra-edge" type="number" min="720" max="1599" step="1" aria-describedby="main-image-extra-help">
+              <label for="main-image-extra-ref">附加规格来源编号（填写边长时必填）</label>
+              <input id="main-image-extra-ref" type="text" maxlength="64" pattern="[A-Za-z0-9][A-Za-z0-9_.\-]{0,63}" aria-describedby="main-image-extra-help">
+              <small id="main-image-extra-help">默认仍导出 1600 × 1600。附加规格另存入同一源文件包；请填写本次需求单或规格记录的编号。</small>
+              <div id="main-image-cards"></div>
+            </fieldset>
+            <fieldset id="long-detail-input" class="field" hidden disabled>
+              <legend>长商详材料</legend>
+              <div id="long-detail-fields"></div>
+            </fieldset>
+            <div class="field" id="role-media-field" hidden>
+              <label for="role-media">本地视频素材</label>
+              <input id="role-media" type="file" accept=".mp4,video/mp4" multiple aria-describedby="role-media-limit" disabled>
+              <small id="role-media-limit"></small>
+            </div>
+            <p id="role-form-status" class="notice" role="status" hidden></p>
+            <div class="form-bottom"><button id="role-submit" class="button primary" type="submit" disabled>运行岗位工具</button></div>
+          </form>
+          <section class="panel result" aria-labelledby="role-result-heading">
+            <div class="panel-heading"><h2 id="role-result-heading">岗位结果</h2><button id="workspace-return-artwork" type="button" class="button outline" hidden>返回原商品</button></div>
+            <p id="role-download-status" class="notice" role="status" hidden></p>
+            <div id="role-result" class="workflow-result" role="region" aria-labelledby="role-result-heading"></div>
+          </section>
+        </section>
+        <section class="panel secondary" id="tasks-view" aria-labelledby="task-heading" hidden>
+          <div class="panel-heading">
+            <h2 id="task-heading">本机任务</h2>
+            <button class="button neutral" id="refresh-tasks" type="button">刷新</button>
+          </div>
+          <p id="task-list-status" class="notice" role="status" hidden></p>
+          <p id="task-list-empty" class="muted" hidden>还没有任务。完成的结果会保存在此工作区。</p>
+          <div id="task-table-wrap" class="table-wrap" hidden>
+            <table>
+              <thead><tr><th scope="col">任务</th><th scope="col">类型</th><th scope="col">站点</th><th scope="col">状态</th><th scope="col">更新时间</th><th scope="col">操作</th></tr></thead>
+              <tbody id="task-rows"></tbody>
+            </table>
+          </div>
+        </section>
+        <section class="panel secondary settings" id="settings-view" aria-labelledby="settings-heading" hidden>
+          <div class="panel-heading"><h2 id="settings-heading">本机工作区</h2></div>
+          <p>当前为原工作台的独立预览。任务、账户配置与产物保存到本机测试目录。</p>
+          <button type="button" class="button outline" id="settings-model-link">打开模型连接</button>
+          <form id="settings-form" hidden>
+            <div class="field">
+              <label for="model-mode">运行方式</label>
+              <select id="model-mode">
+                <option value="demo">模拟演示</option>
+                <option value="ollama">Ollama</option>
+                <option value="openai_compatible">自带云端模型</option>
+              </select>
+              <small id="mode-note">模拟演示不发出模型请求。</small>
+            </div>
+            <div id="model-fields" hidden>
+              <div class="field">
+                <label for="model-base">服务地址</label>
+                <input id="model-base" type="url" autocomplete="off" maxlength="300" placeholder="http://127.0.0.1:11434" aria-describedby="mode-note">
+              </div>
+              <div class="field">
+                <label for="model-name">模型名称</label>
+                <input id="model-name" autocomplete="off" maxlength="128" placeholder="输入服务中已安装的模型">
+              </div>
+              <div class="field">
+                <label for="model-key">访问密钥（可选）</label>
+                <input type="password" id="model-key" autocomplete="new-password" maxlength="4096" aria-describedby="key-note">
+                <small id="key-note"></small>
+              </div>
+              <label class="checkbox" id="forget-control" hidden><input type="checkbox" id="forget-key">清除已保存的密钥</label>
+            </div>
+            <div class="settings-actions">
+              <button type="submit" id="save-settings" class="button primary" disabled>保存设置</button>
+              <button type="button" id="test-connection" class="button outline" disabled>测试已保存的连接</button>
+            </div>
+            <p class="muted">设置和密钥保存在本机。云端连接测试会先提示本次发送的内容和可能的费用。</p>
+            <p id="settings-status" class="notice" role="status" hidden></p>
+          </form>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <dialog id="workspace-task-ordinary-chain-confirm" aria-labelledby="workspace-task-ordinary-chain-title"
+      aria-describedby="workspace-task-ordinary-chain-target workspace-task-ordinary-chain-scope workspace-task-ordinary-chain-cost">
+    <form method="dialog" class="field">
+      <h2 id="workspace-task-ordinary-chain-title">确认制作商品三件套</h2>
+      <p id="workspace-task-ordinary-chain-target"></p>
+      <p id="workspace-task-ordinary-chain-scope"></p>
+      <p id="workspace-task-ordinary-chain-cost"></p>
+      <div class="ws-actions">
+        <button type="submit" value="cancel" class="button outline" autofocus>取消</button>
+        <button type="submit" value="approve" id="workspace-task-ordinary-chain-approve" class="button primary">用此模型开始</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="workspace-task-provider-confirm" aria-labelledby="workspace-task-provider-confirm-title"
+      aria-describedby="workspace-task-provider-confirm-details workspace-task-provider-confirm-charges">
+    <form method="dialog" class="field">
+      <h2 id="workspace-task-provider-confirm-title">确认调用所选模型</h2>
+      <p id="workspace-task-provider-confirm-details"></p>
+      <p id="workspace-task-provider-confirm-charges"></p>
+      <div class="ws-actions">
+        <button type="submit" value="cancel" class="button outline" autofocus>取消</button>
+        <button type="submit" value="approve" id="workspace-task-provider-approve" class="button primary">确认开始</button>
+      </div>
+    </form>
+  </dialog>
+  <dialog id="cloud-consent-dialog" aria-labelledby="cloud-consent-title" aria-describedby="cloud-consent-detail cloud-consent-target cloud-consent-cost">
+    <form method="dialog">
+      <h2 id="cloud-consent-title"></h2>
+      <p id="cloud-consent-detail"></p>
+      <p id="cloud-consent-target"></p>
+      <p id="cloud-consent-cost">本次会发出一次请求，模型服务商可能依账户套餐收费。</p>
+      <div class="consent-actions">
+        <button type="submit" value="cancel" class="button neutral" autofocus>取消</button>
+        <button type="submit" value="confirm" class="button primary" id="cloud-consent-confirm"></button>
+      </div>
+    </form>
+  </dialog>
+  <dialog id="model-access-dialog" aria-labelledby="model-access-title">
+    <form method="dialog" class="field">
+      <h2 id="model-access-title">连接模型</h2>
+      <label for="model-access-provider">模型服务</label>
+      <select id="model-access-provider"><option>阿里云百炼 · Token Plan</option></select>
+      <p class="muted">打开这个窗口不需要先填商品详情页信息。你可以在本机连接窗选自己的模型和填写凭据。</p>
+      <p id="model-access-reason" class="notice" role="status"></p>
+      <div class="form-bottom model-access-actions">
+        <button type="button" class="button primary" id="model-access-next"></button>
+        <button type="submit" class="button outline">关闭</button>
+      </div>
+    </form>
+  </dialog>
+</body>
+</html>

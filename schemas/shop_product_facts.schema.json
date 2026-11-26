@@ -1,0 +1,347 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "minLength": 1,
+      "enum": [
+        "shop_product_facts/1.0"
+      ]
+    },
+    "pack_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 1000000000
+    },
+    "mode": {
+      "type": "string",
+      "minLength": 1,
+      "enum": [
+        "simulated",
+        "user_supplied"
+      ]
+    },
+    "product_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "sku_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "as_of": {
+      "type": "string",
+      "minLength": 1
+    },
+    "expires_at": {
+      "type": "string",
+      "minLength": 1
+    },
+    "image_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1,
+      "maxItems": 256
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "source_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1000000000
+          },
+          "trust_category": {
+            "type": "string",
+            "minLength": 1,
+            "enum": [
+              "user_asserted",
+              "document_claim",
+              "image_claim",
+              "third_party_estimate",
+              "synthetic"
+            ]
+          },
+          "applicable_sku_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 1,
+            "maxItems": 256
+          },
+          "as_of": {
+            "type": "string",
+            "minLength": 1
+          },
+          "expires_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "source_id",
+          "version",
+          "trust_category",
+          "applicable_sku_ids",
+          "as_of",
+          "expires_at"
+        ]
+      },
+      "minItems": 0,
+      "maxItems": 256
+    },
+    "facts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "fact_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "subject": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1000
+          },
+          "kind": {
+            "type": "string",
+            "minLength": 1,
+            "enum": [
+              "money",
+              "quantity",
+              "text",
+              "coupon"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "minLength": 1,
+            "enum": [
+              "known",
+              "unknown",
+              "conflicting"
+            ]
+          },
+          "value": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/money"
+              },
+              {
+                "$ref": "#/$defs/quantity"
+              },
+              {
+                "$ref": "#/$defs/coupon"
+              },
+              {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 16000
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "source_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 0,
+            "maxItems": 256
+          },
+          "alternatives": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "value": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/$defs/money"
+                    },
+                    {
+                      "$ref": "#/$defs/quantity"
+                    },
+                    {
+                      "$ref": "#/$defs/coupon"
+                    },
+                    {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 16000
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "source_ids": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "minItems": 1,
+                  "maxItems": 256
+                }
+              },
+              "required": [
+                "value",
+                "source_ids"
+              ]
+            },
+            "minItems": 0,
+            "maxItems": 256
+          }
+        },
+        "required": [
+          "fact_id",
+          "subject",
+          "kind",
+          "status",
+          "value",
+          "source_ids",
+          "alternatives"
+        ]
+      },
+      "minItems": 1,
+      "maxItems": 256
+    }
+  },
+  "required": [
+    "schema_version",
+    "pack_id",
+    "version",
+    "mode",
+    "product_id",
+    "sku_id",
+    "as_of",
+    "expires_at",
+    "image_ids",
+    "sources",
+    "facts"
+  ],
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "money": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "minor": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000000000000000000
+        },
+        "currency": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[A-Z]{3}$"
+        },
+        "scale": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 6
+        }
+      },
+      "required": [
+        "minor",
+        "currency",
+        "scale"
+      ]
+    },
+    "quantity": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "quantity": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^(?:0|[1-9][0-9]*)(?:\\.[0-9]+)?$",
+          "maxLength": 32
+        },
+        "unit": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "sales_unit": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        }
+      },
+      "required": [
+        "quantity",
+        "unit",
+        "sales_unit"
+      ]
+    },
+    "coupon": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "threshold": {
+          "$ref": "#/$defs/money"
+        },
+        "discount": {
+          "$ref": "#/$defs/money"
+        },
+        "condition_text": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4000
+        },
+        "valid_from": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "valid_until": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "conditions_complete": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "threshold",
+        "discount",
+        "condition_text",
+        "valid_from",
+        "valid_until",
+        "conditions_complete"
+      ]
+    }
+  }
+}

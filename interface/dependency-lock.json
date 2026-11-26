@@ -1,0 +1,9 @@
+{
+  "dtk_version": "5.1.10",
+  "repository": "https://github.com/Evil0ctal/Douyin_TikTok_Download_API",
+  "commit": "26299ef8649a12be82c3769b05b316fdeec8d40d",
+  "scope": "pure client modules only; database/web-server dependencies intentionally excluded",
+  "requirements": "interface/collector-requirements.lock.txt",
+  "original_commit_recorded": false,
+  "note": "Version matches original documentation; original environment did not provide exact source commit."
+}

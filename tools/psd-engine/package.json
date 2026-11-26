@@ -1,0 +1,15 @@
+{
+  "name": "dt-psd-engine",
+  "private": true,
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "scripts": {
+    "test": "node test-synthetic.cjs"
+  },
+  "dependencies": {
+    "@napi-rs/canvas": "0.1.100",
+    "ag-psd": "34.2.1",
+    "sharp": "0.35.5"
+  }
+}

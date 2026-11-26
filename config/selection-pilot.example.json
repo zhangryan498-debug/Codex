@@ -1,0 +1,39 @@
+{
+  "task": "DEMO-OFFLINE-SELECTION",
+  "platforms": [
+    "douyin",
+    "tiktok_shop"
+  ],
+  "douyin_region": "CN",
+  "tiktok_primary_region": "PH",
+  "tiktok_required_regions": [
+    "PH"
+  ],
+  "keywords_zh": [],
+  "keywords_id": [],
+  "price_limit": null,
+  "procurement_limit": null,
+  "requested_candidates": {
+    "min": 0,
+    "max": 0,
+    "allow_shortfall": true
+  },
+  "fulfillment": {
+    "preferred_research_route": null,
+    "verified_platform_shipping_sla": null,
+    "cross_border_direct_low_value_exception_verified": null,
+    "rule_reference": null,
+    "rule_source": null
+  },
+  "status": "synthetic_configuration_example",
+  "verified_recommended_products": [],
+  "report": "",
+  "supplier_screening": {
+    "report": "",
+    "checked_on": null,
+    "candidate_products": 0,
+    "quotable_leads": 0,
+    "distinct_suppliers": 0,
+    "confirmed_same_sku": 0
+  }
+}

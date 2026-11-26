@@ -1,0 +1,8 @@
+# Windows x86-64 GPU runtime for faster-whisper 1.2.1 / ctranslate2 4.8.5.
+# Official NVIDIA-owned PyPI wheels; compatible with RTX 3070 and driver 545.84.
+# cuDNN matches ctranslate2's bundled cudnn64_9.dll 9.10.2.21.
+--index-url https://pypi.org/simple
+--only-binary=:all:
+nvidia-cublas-cu12==12.3.4.1 --hash=sha256:90e0344a0d96c72b6ee0ebec2b1447e552217131914aa678fff1603701005f3a
+nvidia-cudnn-cu12==9.10.2.21 --hash=sha256:c6288de7d63e6cf62988f0923f96dc339cea362decb1bf5b3141883392a7d65e
+nvidia-cuda-runtime-cu12==12.3.101 --hash=sha256:8a91b2284458643233097d10887b93dc4e8085d49228e228db698ec4bcf5ac3f
